@@ -8,6 +8,8 @@ namespace BarcodeManager
     /// </summary>
     public class TerminalWindow
     {
+        private static String _ALLOWED_CHARACTERS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 ";
+
         /// <summary>
         /// The current app context
         /// </summary>
@@ -169,6 +171,8 @@ namespace BarcodeManager
                     continue;
                 } else
                 {
+                    if (!_ALLOWED_CHARACTERS.Contains(c))
+                        continue;
                     _readBuffer += c;
                 }
 

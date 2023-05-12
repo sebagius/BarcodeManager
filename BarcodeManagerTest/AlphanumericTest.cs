@@ -17,6 +17,7 @@ namespace BarcodeManagerTest
             
         }
 
+        //Second optimal approach 3-4ms for all assertions
         [Test]
         public void TestRegex()
         {
@@ -28,6 +29,7 @@ namespace BarcodeManagerTest
             Assert.IsTrue(rg.IsMatch(e.ToString()));
         }
 
+        //Most optimal approach < 1ms for all assertions
         [Test]
         public void TestString()
         {
@@ -40,6 +42,8 @@ namespace BarcodeManagerTest
             Assert.IsTrue(x.Contains(e));
         }
 
+
+        //Least optimal approach 5ms for all assertions
         [Test]
         public void TestChar()
         {
