@@ -36,6 +36,8 @@ namespace BarcodeManager
         /// </summary>
         private int _typeCursor, _endInline;
 
+        private Thread _cursorThread;
+
         /// <summary>
         /// Creates a handler for the terminal window
         /// </summary>
@@ -43,6 +45,8 @@ namespace BarcodeManager
         {
             this._context = new MainContext();
             this._processor = new CommandProcessor(this);
+            this._cursorThread = new Thread(this.AsyncCursor);
+            //this._cursorThread.Start();
         }
 
         /// <summary>
@@ -52,12 +56,20 @@ namespace BarcodeManager
 
         public CommandProcessor Processor { get { return _processor; } }
 
+        public String ReadBuffer { get { return _readBuffer;} }
+
+        public void ClearBuffer()
+        {
+            _readBuffer = "";
+        }
+
         /// <summary>
         /// Prepares the terminal - usually used to prepare main context
         /// </summary>
         public void Prepare()
         {
             _context.SwitchTo(this);
+            Console.CursorVisible = false;
         }
 
         public TerminalWindow ResetContext()
@@ -132,7 +144,7 @@ namespace BarcodeManager
             Console.ReadKey();
         }
 
-        private void ClearInputLine(bool clear = false)
+        public void ClearInputLine(bool clear = false)
         {
             UpdateCursor(0, 5);
             Color(ConsoleColor.White);
@@ -146,13 +158,12 @@ namespace BarcodeManager
                 UpdateCursor();
                 Console.Write(_readBuffer);
             }
-
         }
 
         /// <summary>
         /// Reads input and produces autocompletes
         /// </summary>
-        public void AwaitInput()
+        public void AwaitInput(bool filterCharacters = true, bool block = false)
         {
             char c;
             while ((c = Console.ReadKey().KeyChar) != '\r')
@@ -169,39 +180,46 @@ namespace BarcodeManager
                         _readBuffer += auto[0];
                     }
                 }
-                if (_ALLOWED_CHARACTERS.Contains(c))
+                if (!filterCharacters || _ALLOWED_CHARACTERS.Contains(c))
                 {
                     _readBuffer += c;
                 }
 
                 ClearInputLine();
-
-                String[]? autoCompletes = _processor.AutoComplete(_readBuffer);
-
-                if (autoCompletes == null)
+                if(!block)
                 {
-                    if (Console.CursorLeft >= _endInline)
+                    String[]? autoCompletes = _processor.AutoComplete(_readBuffer);
+
+                    if (autoCompletes == null)
+                    {
+                        if (Console.CursorLeft >= _endInline)
+                            continue;
+
+                        ClearInputLine();
+                        _endInline = -1;
                         continue;
+                    }
 
-                    ClearInputLine();
-                    _endInline = -1;
-                    continue;
+
+                    _typeCursor = Console.CursorLeft;
+                    Color(ConsoleColor.DarkYellow);
+                    for (int i = 0; i < autoCompletes.Length; i++)
+                    {
+                        UpdateCursor(_typeCursor, i);
+                        WriteInline(autoCompletes[i]);
+                    }
+                    UpdateCursor(_typeCursor);
+                    Color(ConsoleColor.White);
                 }
-
-
-                _typeCursor = Console.CursorLeft;
-                Color(ConsoleColor.DarkYellow);
-                for (int i = 0; i < autoCompletes.Length; i++)
-                {
-                    UpdateCursor(_typeCursor, i);
-                    WriteInline(autoCompletes[i]);
-                }
-                UpdateCursor(_typeCursor);
-                Color(ConsoleColor.White);
+                
             }
             ClearInputLine(true);
-            _processor.ProcessCommand(_readBuffer);
-            _readBuffer = "";
+            
+            if(!block)
+            {
+                _processor.ProcessCommand(_readBuffer);
+                _readBuffer = "";
+            }
         }
 
         /// <summary>
@@ -242,6 +260,50 @@ namespace BarcodeManager
             _endInline = 0;
             _cursorX = 0;
             _cursorY = 0;
+        }
+
+        public bool GetConfirm()
+        {
+            while(true)
+            {
+                char c = Console.ReadKey().KeyChar;
+
+                if (c == 'n') 
+                {
+                    return false;
+                } else if(c == 'y')
+                {
+                    return true;
+                }
+
+                ClearInputLine();
+            }
+        }
+
+        /// <summary>
+        /// Asynchronous cursor printing
+        /// Small caveat - it is not perfect :(
+        /// </summary>
+        private void AsyncCursor()
+        {
+            while(true)
+            {
+                Thread.Sleep(250);
+                Console.BackgroundColor = ConsoleColor.White;
+                int saveX = Console.CursorLeft;
+                int saveY = Console.CursorTop;
+                Console.Write(" ");
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.CursorLeft = saveX;
+                Console.CursorTop = saveY;
+                Thread.Sleep(250);
+                Console.BackgroundColor = ConsoleColor.Black;
+                saveX = Console.CursorLeft;
+                saveY = Console.CursorTop;
+                Console.Write(" ");
+                Console.CursorLeft = saveX;
+                Console.CursorTop = saveY;
+            }
         }
     }
 }

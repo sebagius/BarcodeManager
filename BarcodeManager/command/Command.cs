@@ -48,6 +48,18 @@ namespace BarcodeManager.command
 
         protected int MaxProceeding { get { return _maximumProceeding; } set { _maximumProceeding = value; } }
 
+        public String readCommandString(String prompt, TerminalWindow window)
+        {
+            window.Color(ConsoleColor.Yellow).Write(prompt);
+            String? input;
+            window.AwaitInput(false, true);
+            input = window.ReadBuffer;
+            window.ClearBuffer();
+            window.ClearInputLine();
+
+            return input;
+        }
+
         /// <summary>
         /// Will forward the input onto the correct subcommand or execute this command if the right argument is reached
         /// </summary>
