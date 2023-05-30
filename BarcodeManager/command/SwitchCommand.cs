@@ -20,7 +20,7 @@ namespace BarcodeManager.command
             {
                 case "registry":
                 case "reg":
-                    window.AppContext = new RegistryContext();
+                    window.AppContext = new BarcodeContext();
                     break;
                 case "stock":
                     window.AppContext = new StockContext();

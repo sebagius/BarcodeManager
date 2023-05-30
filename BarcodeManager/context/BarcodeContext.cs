@@ -9,15 +9,16 @@ using System.Threading.Tasks;
 
 namespace BarcodeManager.context
 {
-    public class RegistryContext : AppContext, DataContext<Barcode>
+    public class BarcodeContext : AppContext, DataContext<Barcode>
     {
 
         private BarcodeRegistry _registry;
 
-        public RegistryContext() : base("Registry Application Context", "Manage Barcode Registry")
+        public BarcodeContext() : base("Registry Application Context", "Manage Barcode Registry")
         {
             Commands.Add(new BarcodeAddCommand());
             Commands.Add(new BarcodeViewCommand());
+            Commands.Add(new BarcodeDeleteCommand());
             this._registry = new BarcodeRegistry();
         }
 

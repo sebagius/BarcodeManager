@@ -45,7 +45,7 @@ namespace BarcodeManagerTest
         [Test]
         public void TestOtherAutoComplete()
         {
-            _window.AppContext = new RegistryContext();
+            _window.AppContext = new BarcodeContext();
             Assert.That(_processor.AutoComplete("add U")![0]!, Is.EqualTo("PC"));
         }
     }
