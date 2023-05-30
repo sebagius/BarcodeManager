@@ -12,12 +12,22 @@ namespace BarcodeManager.context
         {
         }
 
-        public override AppContext SwitchTo(TerminalWindow terminalWindow)
+        public override void HandleExit(TerminalWindow terminalWindow)
         {
-            base.SwitchTo(terminalWindow);
+            throw new NotImplementedException();
+        }
+
+        public override void PrintIntro(TerminalWindow terminalWindow)
+        {
             terminalWindow.Color(ConsoleColor.Yellow)
                 .Write("Stock Management Interface")
                 .EndLine();
+        }
+
+        public override AppContext SwitchTo(TerminalWindow terminalWindow)
+        {
+            base.SwitchTo(terminalWindow);
+            PrintIntro(terminalWindow);
 
             return this;
         }

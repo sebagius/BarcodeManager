@@ -13,7 +13,7 @@ namespace BarcodeManager.command
         private String? _help;
         private String[] _autoCompletes;
         private readonly List<Command> _subCommands;
-        private int _position, _minimumProceeding, _maximumProceeding;
+        private int _minimumProceeding, _maximumProceeding;
 
         public Command(String name, String? help) : this(name, help, new string[] { }, new List<Command>())
         {
@@ -41,8 +41,6 @@ namespace BarcodeManager.command
         public String? HelpMessage { get { return _help; } }
 
         public String[] AutoCompletes { get { return _autoCompletes; } }
-
-        public int Position { get { return _position; } }
 
         protected int MinProceeding { get { return _minimumProceeding; } set { _minimumProceeding = value; } }
 

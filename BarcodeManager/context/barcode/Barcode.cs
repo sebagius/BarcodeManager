@@ -1,4 +1,5 @@
-﻿using System;
+﻿using BarcodeManager.exception;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,7 @@ namespace BarcodeManager.context.barcode
 
         public String ItemName { get { return _itemName == null ? "" : _itemName; } }
 
-        public String ItemDescription { get { return _itemDescription == null ? "" : _itemDescription; } }
+        public String? ItemDescription { get { return _itemDescription; } }
 
         public DateTime DateAdded { get { return _dateAdded; } }
 

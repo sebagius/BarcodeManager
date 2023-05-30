@@ -1,4 +1,5 @@
 ﻿using BarcodeManager.command;
+using BarcodeManager.registry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -44,5 +45,9 @@ namespace BarcodeManager.context
             terminalWindow.Clear();
             return this;
         }
+
+        public abstract void PrintIntro(TerminalWindow terminalWindow);
+
+        public abstract void HandleExit(TerminalWindow terminalWindow);
     }
 }

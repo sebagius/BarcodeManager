@@ -25,13 +25,44 @@ namespace BarcodeManager.registry
             this._fileName = fileName;
         }
 
-        public abstract void save();
-        public abstract void load();
+        public abstract void Save();
+        public virtual void Load()
+        {
+            this._registry.Clear();
+        }
 
         public void Add(String key, K value) => _registry.Add(key, value);
         public void Remove(String key) => _registry.Remove(key);
 
         public bool Has(String key) => _registry.ContainsKey(key);
+
+        public StreamWriter InitialiseWriter()
+        {
+            _writeStream = new StreamWriter(FileName, false);
+            return _writeStream;
+        }
+
+        public StreamReader? InitialiseReader()
+        {
+            if (!File.Exists(FileName))
+                return null;
+            _readStream = new StreamReader(FileName);
+            return _readStream;
+        }
+
+        public void CloseWriter()
+        {
+            if(_writeStream != null)
+                _writeStream.Close();
+            _writeStream = null;
+        }
+
+        public void CloseReader()
+        {
+            if (_readStream != null)
+                _readStream.Close();
+            _readStream = null;
+        }
 
     }
 }

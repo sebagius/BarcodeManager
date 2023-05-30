@@ -1,4 +1,5 @@
 ﻿using BarcodeManager.context;
+using BarcodeManager.context.barcode;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace BarcodeManager.command
                 Environment.Exit(0);
                 return true;
             }
+
+            window.AppContext.HandleExit(window);
 
             window.AppContext = new MainContext();
 

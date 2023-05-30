@@ -1,4 +1,7 @@
-﻿using BarcodeManager.context.barcode;
+﻿using BarcodeManager.context;
+using BarcodeManager.context.barcode;
+using BarcodeManager.exception;
+using BarcodeManager.registry;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -129,16 +132,25 @@ namespace BarcodeManager.command
             }
 
             window.Color(ConsoleColor.Blue)
-                .Write("Item Name: {0}\nItem Description: {1}\nDate Added: {2}\n", b.ItemName, b.ItemDescription, b.DateAdded)
+                .Write("Item Name: {0}\nItem Description: {1}\nDate Added: {2}\n", b.ItemName, b.ItemDescription == null ? "" : b.ItemDescription, b.DateAdded)
                 .Color(ConsoleColor.Yellow)
                 .Write("Confirm Add? (y/n)\n");
 
             if(window.GetConfirm())
             {
                 window.ResetContext();
+                
+                
+                if(window.AppContext is not DataContext<Barcode>)
+                {
+                    throw new IllegalContextException(); // For the command to be processed, we MUST be in the context of the barcode registry
+                }
+
+                DataContext<Barcode> context = (DataContext<Barcode>)window.AppContext;
+                context.Registry.Add(b.BarcodeNumber, b);
+
                 window.Color(ConsoleColor.Yellow)
                     .Write("Barcode added!");
-                //TODO ADD BARCODE
 
                 return true;
             }

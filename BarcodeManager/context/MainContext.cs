@@ -14,9 +14,13 @@ namespace BarcodeManager.context
             Commands.Add(new SwitchCommand());
         }
 
-        public override AppContext SwitchTo(TerminalWindow terminalWindow)
+        public override void HandleExit(TerminalWindow terminalWindow)
         {
-            base.SwitchTo(terminalWindow);
+            //TODO
+        }
+
+        public override void PrintIntro(TerminalWindow terminalWindow)
+        {
             terminalWindow.Color(ConsoleColor.Yellow)
                 .Write("Welcome to Barcode Manager")
                 .Color(ConsoleColor.Blue)
@@ -25,6 +29,12 @@ namespace BarcodeManager.context
                 .Color(ConsoleColor.Yellow)
                 .Write("Type 'help' to view commands for the current context!")
                 .EndLine();
+        }
+
+        public override AppContext SwitchTo(TerminalWindow terminalWindow)
+        {
+            base.SwitchTo(terminalWindow);
+            PrintIntro(terminalWindow);
 
             return this;
         }

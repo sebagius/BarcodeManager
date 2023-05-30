@@ -74,7 +74,8 @@ namespace BarcodeManager
 
         public TerminalWindow ResetContext()
         {
-            _context.SwitchTo(this);
+            Clear();
+            AppContext.PrintIntro(this);
             return this;
         }
 
@@ -179,8 +180,7 @@ namespace BarcodeManager
                     {
                         _readBuffer += auto[0];
                     }
-                }
-                if (!filterCharacters || _ALLOWED_CHARACTERS.Contains(c))
+                } else if (!filterCharacters || _ALLOWED_CHARACTERS.Contains(c))
                 {
                     _readBuffer += c;
                 }
