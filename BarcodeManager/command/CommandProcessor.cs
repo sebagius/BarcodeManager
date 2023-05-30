@@ -68,16 +68,15 @@ namespace BarcodeManager.command
             if (text.Length < 2)
                 return null;
 
-            text = text.ToLower();
+            String textL = text.ToLower();
             String[] split = text.Split(" ");
-            
 
             foreach(Command c in ContextCommands)
             {
                 String key = c.Name;
-                if(key.StartsWith(text) || key.Equals(split[0]))
+                if(key.StartsWith(textL) || key.Equals(textL.Split(" ")[0]))
                 {
-                    return c.PredictSubCommand(text, split);
+                    return c.PredictSubCommand(text, textL, split);
                 }
             }
 

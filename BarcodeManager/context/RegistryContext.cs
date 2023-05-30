@@ -11,7 +11,7 @@ namespace BarcodeManager.context
     {
         public RegistryContext() : base("Registry Application Context", "Manage Barcode Registry")
         {
-            //Commands.Add();
+            Commands.Add(new BarcodeAddCommand());
         }
 
         public override AppContext SwitchTo(TerminalWindow terminalWindow)

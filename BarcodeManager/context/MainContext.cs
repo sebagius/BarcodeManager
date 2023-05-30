@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace BarcodeManager.context
 {
-    public class MainContext : AppContext
+    public class MainContext : context.AppContext
     {
         public MainContext() : base("Main Application Context", "Main Menu")
         {

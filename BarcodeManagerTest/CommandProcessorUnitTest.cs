@@ -41,5 +41,12 @@ namespace BarcodeManagerTest
             Assert.That(_processor.AutoComplete("s"), Is.Null);
             Assert.That(_processor.AutoComplete("blah"), Is.Null);
         }
+
+        [Test]
+        public void TestOtherAutoComplete()
+        {
+            _window.AppContext = new RegistryContext();
+            Assert.That(_processor.AutoComplete("add U")![0]!, Is.EqualTo("PC"));
+        }
     }
 }

@@ -27,7 +27,6 @@ namespace BarcodeManager.command
 
         public Command(String name, String? help, String[] autoCompletes) : this(name, help, autoCompletes, new List<Command>())
         {
-
         }
 
         public Command(String name, String? help, String[] autoCompletes, List<Command> subCommands)
@@ -82,9 +81,10 @@ namespace BarcodeManager.command
         /// Returns a predictive subcommand autocomplete
         /// </summary>
         /// <param name="input">the input text</param>
+        /// <param name="inputL">the lowercase input text</param>
         /// <param name="split">the split text</param>
         /// <returns>predicted text</returns>
-        public String[]? PredictSubCommand(String input, String[] split)
+        public String[]? PredictSubCommand(String input, String inputL, String[] split)
         {
             if(_subCommands.Count == 0)
             {
@@ -116,6 +116,8 @@ namespace BarcodeManager.command
                         predictiveResult = predictiveResult.Replace(_name, predictiveName);
                     if (!basicPredictive.StartsWith(input))
                         continue;
+
+                    
                     result.Add(predictiveResult.Substring(input.Length));
                     i++;
                 }

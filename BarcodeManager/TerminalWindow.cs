@@ -1,5 +1,6 @@
 ﻿using BarcodeManager.command;
 using BarcodeManager.context;
+using System.Text.RegularExpressions;
 
 namespace BarcodeManager
 {
@@ -82,7 +83,7 @@ namespace BarcodeManager
         /// <param name="message">the string message</param>
         /// <param name="format">the param objects to format</param>
         /// <returns>this</returns>
-        public TerminalWindow Write(string message, params object[] format) 
+        public TerminalWindow Write(string message, params object[] format)
         {
             RestoreCursor();
             Console.Write(message, format);
@@ -113,7 +114,7 @@ namespace BarcodeManager
         public TerminalWindow EndLine()
         {
             RestoreCursor();
-            Console.ForegroundColor= ConsoleColor.White;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
             StoreCursor();
             UpdateCursor();
@@ -139,13 +140,13 @@ namespace BarcodeManager
             {
                 Console.Write(" ");
             }
-            
-            if(!clear)
+
+            if (!clear)
             {
                 UpdateCursor();
                 Console.Write(_readBuffer);
             }
-                
+
         }
 
         /// <summary>
@@ -156,23 +157,20 @@ namespace BarcodeManager
             char c;
             while ((c = Console.ReadKey().KeyChar) != '\r')
             {
-                if(c == '\b' && _readBuffer.Length > 0)
+                if (c == '\b' && _readBuffer.Length > 0)
                 {
                     _readBuffer = _readBuffer.Substring(0, _readBuffer.Length - 1);
-                    
-                } else if(c == '\t')
+                }
+                else if (c == '\t')
                 {
                     String[]? auto = _processor.AutoComplete(_readBuffer);
                     if (auto != null && auto.Length > 0)
                     {
                         _readBuffer += auto[0];
                     }
-                    ClearInputLine();
-                    continue;
-                } else
+                }
+                if (_ALLOWED_CHARACTERS.Contains(c))
                 {
-                    if (!_ALLOWED_CHARACTERS.Contains(c))
-                        continue;
                     _readBuffer += c;
                 }
 
@@ -189,7 +187,7 @@ namespace BarcodeManager
                     _endInline = -1;
                     continue;
                 }
-                    
+
 
                 _typeCursor = Console.CursorLeft;
                 Color(ConsoleColor.DarkYellow);
